@@ -1,6 +1,7 @@
 package com.enmivida.app.security.security;
 
 import com.enmivida.app.security.entity.CustomerEntity;
+import com.enmivida.app.security.entity.RoleEntity;
 import com.enmivida.app.security.repository.CustomerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -12,8 +13,8 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -30,7 +31,10 @@ public class MyAuthenticationProvider implements AuthenticationProvider {
         CustomerEntity customer = repository.findByEmail(username).orElseThrow(() -> new BadCredentialsException("Invalid Credentials"));
 
         if (passwordEncoder.matches(pwd, customer.getPassword())) {
-            List<SimpleGrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(customer.getRole()));
+            List<RoleEntity> roles = customer.getRoles();
+            List<SimpleGrantedAuthority> authorities = roles.stream()
+                    .map(role -> new SimpleGrantedAuthority(role.getName()))
+                    .collect(Collectors.toList());
             return new UsernamePasswordAuthenticationToken(username, pwd, authorities);
         }
         throw new BadCredentialsException("Invalid Credentials");
