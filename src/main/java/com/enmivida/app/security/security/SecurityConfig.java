@@ -25,6 +25,7 @@ public class SecurityConfig {
     // Antes de la version 6 era necesario extender de WebSecurityAdapter
 
     private final CsrfCookieFilter csrfCookieFilter;
+    private final ApiKeyFilter apiKeyFilter;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -33,6 +34,10 @@ public class SecurityConfig {
         // (one of X-CSRF-TOKEN or X-XSRF-TOKEN by default) or a request parameter (_csrf by default).
         CsrfTokenRequestAttributeHandler requestHandler = new CsrfTokenRequestAttributeHandler();
         requestHandler.setCsrfRequestAttributeName("_csrf");
+
+        // es un filtro que se aplica BEFORE BasicAuthenticationFilter
+        // es decir, antes de la propia autenticación, se comprueba el filtro de la api
+        http.addFilterBefore(apiKeyFilter, BasicAuthenticationFilter.class);
 
         http
                 .authorizeHttpRequests(auth ->
