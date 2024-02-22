@@ -1,7 +1,6 @@
 package com.enmivida.app.security.controller;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -31,7 +30,7 @@ public class AppControllers {
     }
 
     // existe un PostAuthorize
-    @PreAuthorize("hasRole('ADMIN')")
+    //@PreAuthorize("hasRole('ADMIN')")
     @GetMapping(path = "/accounts")
     public ResponseEntity<String> accounts() {
         return ResponseEntity.ok().body("accounts");

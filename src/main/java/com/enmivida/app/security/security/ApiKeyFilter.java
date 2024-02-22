@@ -11,7 +11,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.Optional;
 
-@Component
+//@Component
 public class ApiKeyFilter extends OncePerRequestFilter {
 
     private static final String API_KEY = "myKey";
